@@ -3,27 +3,54 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
   <title></title>
-  <script src="angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
   <script src="application.js"></script>
   <link rel="stylesheet" type="text/css" href="application.css">
-  
+
 </head>
 <body>
-  
-<div ng-app="todo" ng-controller="page"> <a href="" ng-click="ui.current(1);">Tab 1</a>
- <a href="" ng-click="ui.current(2);">Tab 2</a>
 
+    <div ng-app="todo" ng-controller="page" >
+      <div ng-controller="tabController">
+
+        <div ng-repeat="tab in datas.getTab()">
+          <a href="" ng-click="ui.current($index+1) ; datas.setDataTab($index);" >Tab {{$index+1}}</a>
+        </div>
     <hr/>
-    <div ng-controller="tab1" ng-show="ui.isCurrent(1);">Tab 1
-        <ul ng-repeat="item in list">
-            <li ng-class="{ 'done': item.complete }">{{item.name}}</li>
+    <div ng-repeat="tab in datas.getTab()">
+      <div ng-show="ui.isCurrent({{$index+1}});">
+      Tab {{$index+1}}
+        <ul ng-repeat="item in datas.dataTab()">
+            <li ng-class="{ 'done': item.data.complete }">{{item.data.name}}</li>
+            <a href="" ng-click="datas.complete(item.data,datas.index);">complete</a>
+            <form ng-submit="datas.Tranfer($index,item)" ng-controller="tabController">
+            Tranfer:
+              <select  ng-model="tranfer1" ng-options="tabTranfer.list for tabTranfer in datas.getTab()">
+                  <option value="">{{tabTranfer.list}}</option>
+              </select>
+              <input type="submit"  value="Submit" />
+            </form>
         </ul>
+      </div>
     </div>
-    <div ng-controller="tab2" ng-show="ui.isCurrent(2);">Tab 2
-        <ul ng-repeat="item in list">
-            <li ng-class="{ 'done': item.complete }">{{item.name}}</li>
-        </ul>
+
     </div>
+
+    <form ng-submit="datas.submitItem()" ng-controller="tabController">
+      <p>Add items</p>
+      <p>name : <input type="NewItem" ng-model="NewItem" name="NewItem"></p>
+      Tab:
+      <select ng-model="Tab" ng-options="tab.list for tab in datas.getTab()">
+          <option value="">{{tab.list}}</option>
+      </select>
+      <input type="submit"  value="Submit" />
+    </form>
+
+    <form ng-submit="datas.submitTab()" ng-controller="tabController">
+      <p>Add New Tab</p>
+      <p>name : <input type="Newtab" ng-model="Newtab" name="Newtab"></p>
+      <input type="submit"  value="Submit" />
+    </form>
 </div>
 
 </body>
